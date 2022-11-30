@@ -72,13 +72,11 @@ class Login extends React.Component {
     );
   }
 }
-Login.defaultProps = {
-  dispatch: { push: () => {} },
-};
+
 Login.propTypes = {
   dispatch: PropTypes.shape({
     push: PropTypes.func,
-  }),
+  }).isRequired,
   history: PropTypes.shape({
     push: PropTypes.func,
   }).isRequired,
