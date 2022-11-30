@@ -12,7 +12,7 @@ const testidBtnSearch = 'exec-search-btn';
 const testidInputSearch = 'search-input';
 
 describe('Testa Search Header', () => {
-  it('Verifica inputs no Seacher Header', async () => {
+  it('Verifica inputs na page meals', async () => {
     const { history } = renderWithRouter(<App />);
 
     act(() => { history.push('/meals'); });
@@ -42,7 +42,7 @@ describe('Testa Search Header', () => {
     userEvent.click(btnSearch);
     await new Promise((r) => { setTimeout(r, 2000); });
   });
-  it('Verifica inputs meals', async () => {
+  it('Verifica inputs na page meals com outros filtros especificados', async () => {
     const { history } = renderWithRouter(<App />);
 
     act(() => { history.push('/meals'); });
@@ -72,7 +72,7 @@ describe('Testa Search Header', () => {
     userEvent.click(btnSearch);
     await new Promise((r) => { setTimeout(r, 2000); });
   });
-  it('Verifica inputs meals e outro filtro', async () => {
+  it('Verifica inputs meals e outros filtros', async () => {
     const { history } = renderWithRouter(<App />);
 
     act(() => { history.push('/meals'); });
@@ -102,7 +102,7 @@ describe('Testa Search Header', () => {
     userEvent.click(btnSearch);
     await new Promise((r) => { setTimeout(r, 2000); });
   });
-  it('Verifica inputs meals e outro filtro', async () => {
+  it('Verifica inputs meals e outros filtros especificados', async () => {
     const { history } = renderWithRouter(<App />);
 
     act(() => { history.push('/meals'); });
@@ -135,7 +135,7 @@ describe('Testa Search Header', () => {
 });
 
 describe('Testa Search Header', () => {
-  it('Verifica inputs e drinks', async () => {
+  it('Verifica inputs na page drinks', async () => {
     const { history } = renderWithRouter(<App />);
 
     act(() => { history.push('/drinks'); });
@@ -165,7 +165,7 @@ describe('Testa Search Header', () => {
     userEvent.click(btnSearch);
     await new Promise((r) => { setTimeout(r, 2000); });
   });
-  it('Verifica inputs na page drinks', async () => {
+  it('Verifica inputs na page drinks e outros filtros especificados', async () => {
     const { history } = renderWithRouter(<App />);
 
     act(() => { history.push('/drinks'); });
@@ -195,7 +195,7 @@ describe('Testa Search Header', () => {
     userEvent.click(btnSearch);
     await new Promise((r) => { setTimeout(r, 2000); });
   });
-  it('Verifica inputs', async () => {
+  it('Verifica inputs na page drinks e outros filtros especificados', async () => {
     const { history } = renderWithRouter(<App />);
 
     act(() => { history.push('/drinks'); });
@@ -225,7 +225,7 @@ describe('Testa Search Header', () => {
     userEvent.click(btnSearch);
     await new Promise((r) => { setTimeout(r, 2000); });
   });
-  it('Verifica inputs', async () => {
+  it('Verifica inputs na page drinks e outros filtros', async () => {
     const { history } = renderWithRouter(<App />);
 
     act(() => { history.push('/drinks'); });
@@ -255,4 +255,14 @@ describe('Testa Search Header', () => {
     userEvent.click(btnSearch);
     await new Promise((r) => { setTimeout(r, 2000); });
   });
+
+  /* describe('Testa Search Header', () => {
+    it('Verifica funcionamento da busca por uma comida', async () => {
+      const { history } = renderWithRouter(<App />);
+
+      act(() => { history.push('/meals'); });
+
+      const inputName =
+    });
+  }); */
 });
