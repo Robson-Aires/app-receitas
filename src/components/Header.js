@@ -1,10 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import profileIcon from '../images/profileIcon.svg';
 import searchIcon from '../images/searchIcon.svg';
+import SearchBar from './SearchBar';
+import recipesContext from '../context/recipesContext';
 
 function Header({ title, showIcon = true }) {
   const [showInput, setShowInput] = useState(false);
+  const { inputSearch, setInputSearch } = useContext(recipesContext);
 
   return (
     <div>
@@ -32,9 +35,12 @@ function Header({ title, showIcon = true }) {
           placeholder="Buscar"
           type="text"
           data-testid="search-input"
+          value={ inputSearch }
+          onChange={ (e) => setInputSearch(e.target.value) }
         />}
 
       </header>
+      <SearchBar />
     </div>
   );
 }
