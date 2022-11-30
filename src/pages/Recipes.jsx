@@ -12,7 +12,7 @@ function Recipes() {
     apiIngredient()
       .then((result) => setData(result.meals));
     setLoading(false);
-  }, []);
+  }, [setLoading, setData]);
   if (loading) return <p>Carregando...</p>;
   return (
     <div>

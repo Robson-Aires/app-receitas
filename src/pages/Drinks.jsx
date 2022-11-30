@@ -12,7 +12,7 @@ function Drinks() {
     apiIngredientes()
       .then((result) => setData(result.drinks));
     setLoading(false);
-  }, []);
+  }, [setLoading, setData]);
   if (loading) return <p>Carregando...</p>;
   return (
     <div>
