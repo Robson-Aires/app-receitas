@@ -1,31 +1,42 @@
 import React, { useContext } from 'react';
+import { useHistory } from 'react-router-dom';
 import recipesContext from '../context/recipesContext';
 import { apiIngredient, apiName, apiFirstLetter } from '../services/apis';
+import { apiIngredientes, apiNames, apiFirstLetters } from '../services/apiDrinks';
 
 function SearchBar() {
-  const { data, setData, inputSearch,
+  const { /* data */ setData, inputSearch,
     radio, setRadio } = useContext(recipesContext);
 
+  const history = useHistory();
   const handleClick = () => {
     switch (radio) {
-    case 'ingredient':
-      apiIngredient(inputSearch).then((result) => setData(result.meals));
-      break;
     case 'name':
-      apiName(inputSearch).then((result) => setData(result.meals));
+      if (history.location.pathname === '/meals') {
+        apiName(inputSearch).then((result) => setData(result.meals));
+        break;
+      }
+      apiNames(inputSearch).then((result) => setData(result.drinks));
       break;
     case 'firstLetter':
       if (inputSearch.length !== 1) {
         global.alert('Your search must have only 1 (one) character');
         break;
       }
-      apiFirstLetter(inputSearch).then((result) => setData(result.meals));
+      if (history.location.pathname === '/meals') {
+        apiFirstLetter(inputSearch).then((result) => setData(result.meals));
+        break;
+      }
+      apiFirstLetters(inputSearch).then((result) => setData(result.drinks));
       break;
     default:
-      console.log('Ops! Algo deu muuuito errado!');
+      if (history.location.pathname === '/meals') {
+        apiIngredient(inputSearch).then((result) => setData(result.meals));
+        break;
+      }
+      apiIngredientes(inputSearch).then((result) => setData(result.drinks));
       break;
     }
-    console.log(apiFirstLetter);
   };
 
   return (
@@ -35,6 +46,7 @@ function SearchBar() {
         <input
           id="searchIngredient"
           value="ingredient"
+          checked={ radio === 'ingredient' }
           type="radio"
           name="search"
           data-testid="ingredient-search-radio"
@@ -45,6 +57,7 @@ function SearchBar() {
         Nome
         <input
           id="searchName"
+          checked={ radio === 'name' }
           type="radio"
           value="name"
           name="search"
@@ -56,6 +69,7 @@ function SearchBar() {
         Primeira letra
         <input
           type="radio"
+          checked={ radio === 'firstLetter' }
           value="firstLetter"
           id="searchFirstLetter"
           name="search"
@@ -71,9 +85,9 @@ function SearchBar() {
         Buscar
 
       </button>
-      <div>
+      {/* <div>
         { JSON.stringify(data) }
-      </div>
+      </div> */}
     </div>
   );
 }

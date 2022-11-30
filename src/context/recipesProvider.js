@@ -4,7 +4,7 @@ import recipesContext from './recipesContext';
 export default function RecipesProvider({ children }) {
   const [data, setData] = useState([]);
   const [inputSearch, setInputSearch] = useState('');
-  const [radio, setRadio] = useState('');
+  const [radio, setRadio] = useState('ingredient');
 
   const values = useMemo(() => ({
     data,
