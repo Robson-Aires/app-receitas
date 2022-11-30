@@ -1,5 +1,10 @@
 export const apiIngredient = async (ingredient) => {
-  const request = await fetch(`https://www.themealdb.com/api/json/v1/1/filter.php?i=${ingredient}`);
+  if (ingredient) {
+    const request = await fetch(`https://www.themealdb.com/api/json/v1/1/filter.php?i=${ingredient}`);
+    const response = await request.json();
+    return response;
+  }
+  const request = await fetch('https://www.themealdb.com/api/json/v1/1/search.php?s=');
   const response = await request.json();
   return response;
 };
