@@ -3,6 +3,8 @@ import { screen, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import App from '../App';
 import renderWithRouter from '../Helpers/renderWithRouter';
+import oneMeal from '../../cypress/mocks/oneMeal';
+import oneDrink from '../../cypress/mocks/oneDrink';
 
 const testidIngredient = 'ingredient-search-radio';
 const testidName = 'name-search-radio';
@@ -256,13 +258,86 @@ describe('Testa Search Header', () => {
     await new Promise((r) => { setTimeout(r, 2000); });
   });
 
-  /* describe('Testa Search Header', () => {
-    it('Verifica funcionamento da busca por uma comida', async () => {
+  describe('Testa Search Header', () => {
+    it('Verifica o funcionamento do alert', async () => {
       const { history } = renderWithRouter(<App />);
 
-      act(() => { history.push('/meals'); });
+      act(() => { history.push('/drinks'); });
 
-      const inputName =
+      const inputIngredient = screen.getByTestId(testidIngredient);
+      expect(inputIngredient).toBeInTheDocument();
+
+      const btnSearch = screen.getByTestId(testidBtnSearch);
+      expect(btnSearch).toBeInTheDocument();
+
+      const btnSearchTop = screen.getByTestId('search-top-btn');
+      expect(btnSearchTop).toBeInTheDocument();
+
+      userEvent.click(btnSearchTop);
+
+      const inputName = screen.getByTestId(testidName);
+      expect(inputName).toBeInTheDocument();
+
+      userEvent.type(inputName, 'lime');
+      userEvent.click(inputIngredient);
+      userEvent.click(btnSearch);
+      await new Promise((r) => { setTimeout(r, 1000); });
     });
-  }); */
+  });
+});
+
+describe('Testa Search Header', () => {
+  afterEach(() => { jest.resetAllMocks(); });
+  beforeEach(() => { jest.resetAllMocks(); });
+
+  it('Verifica o funcionamento da page drink ', async () => {
+    jest.spyOn(global, 'fetch'); global.fetch.mockResolvedValue({ json: jest.fn().mockResolvedValue(oneDrink) });
+
+    const { history } = renderWithRouter(<App />);
+
+    act(() => { history.push('/drinks'); });
+
+    const btnSearchTop = screen.getByTestId('search-top-btn');
+    expect(btnSearchTop).toBeInTheDocument();
+
+    userEvent.click(btnSearchTop);
+
+    const inputName = screen.getByTestId(testidName);
+    expect(inputName).toBeInTheDocument();
+
+    const btnSearch = screen.getByTestId(testidBtnSearch);
+    expect(btnSearch).toBeInTheDocument();
+
+    userEvent.type(inputName, 'lime');
+    userEvent.click(btnSearch);
+    await new Promise((r) => { setTimeout(r, 1000); });
+    jest.clearAllMocks();
+  });
+});
+describe('Testa Search Header', () => {
+  beforeEach(() => { jest.resetAllMocks(); });
+  afterEach(() => { jest.resetAllMocks(); });
+  it('Verifica o funcionamento do alert', async () => {
+    jest.spyOn(global, 'fetch'); global.fetch.mockResolvedValue({ json: jest.fn().mockResolvedValue(oneMeal) });
+
+    const { history } = renderWithRouter(<App />);
+
+    act(() => { history.push('/meals'); });
+
+    const btnSearchTop = screen.getByTestId('search-top-btn');
+    expect(btnSearchTop).toBeInTheDocument();
+
+    userEvent.click(btnSearchTop);
+
+    const inputName = screen.getByTestId(testidName);
+    expect(inputName).toBeInTheDocument();
+
+    const btnSearch = screen.getByTestId(testidBtnSearch);
+    expect(btnSearch).toBeInTheDocument();
+
+    userEvent.type(inputName, 'lime');
+    userEvent.click(btnSearch);
+    await new Promise((r) => { setTimeout(r, 1000); });
+    jest.clearAllMocks();
+  });
 });

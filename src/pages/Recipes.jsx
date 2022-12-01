@@ -25,7 +25,7 @@ function Recipes() {
     <div>
       <Header title="Meals" />
       <ul>
-        {data.map((Ingredient, index) => (
+        {data?.map((Ingredient, index) => (
           index < number12
            && (
              <li
