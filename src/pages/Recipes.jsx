@@ -1,11 +1,13 @@
 import React, { useEffect, useContext } from 'react';
+// import PropTypes from 'prop-types';
+import { useHistory } from 'react-router-dom';
 import Footer from '../components/Footer';
 import Header from '../components/Header';
-// import { useHistory } from 'react-router-dom';
 import recipesContext from '../context/recipesContext';
 import { apiIngredient } from '../services/apis';
 
 function Recipes() {
+  const history = useHistory();
   const number12 = 12;
   const { data, setData, setLoading, loading } = useContext(recipesContext);
   useEffect(() => {
@@ -13,6 +15,11 @@ function Recipes() {
       .then((result) => setData(result.meals));
     setLoading(false);
   }, [setLoading, setData]);
+
+  const handleSubmit = (target) => {
+    const result = target;
+    history.push(`/meals/${result}`);
+  };
   if (loading) return <p>Carregando...</p>;
   return (
     <div>
@@ -21,12 +28,17 @@ function Recipes() {
         {data.map((Ingredient, index) => (
           index < number12
            && (
-             <li key={ index } data-testid={ `${index}-recipe-card` }>
+             <li
+               key={ index }
+               data-testid={ `${index}-recipe-card` }
+             >
                <p data-testid={ `${index}-card-name` }>{Ingredient.strMeal}</p>
-               <img
-                 src={ Ingredient.strMealThumb }
-                 alt="asdf"
+               <input
                  data-testid={ `${index}-card-img` }
+                 type="image"
+                 alt="asd"
+                 src={ Ingredient.strMealThumb }
+                 onClick={ () => handleSubmit(Ingredient.idMeal) }
                />
              </li>
            )))}
@@ -35,5 +47,10 @@ function Recipes() {
     </div>
   );
 }
+
+// Recipes.propTypes = {
+//   history: PropTypes.shape({
+//     push: PropTypes.func,
+//   }).isRequired,
 
 export default Recipes;
