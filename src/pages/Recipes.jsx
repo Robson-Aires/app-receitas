@@ -10,12 +10,16 @@ function Recipes() {
   const number12 = 12;
   const numberOfButtons = 5;
   const { data, setData, setLoading, loading,
-    handleFilterButton, memoryData } = useContext(recipesContext);
+    handleFilterButton, memoryData, setMemoryData,
+    setSearchCategory } = useContext(recipesContext);
   useEffect(() => {
     apiIngredient()
-      .then((result) => setData(result.meals));
+      .then((result) => {
+        setData(result.meals);
+        setMemoryData(result.meals);
+      });
     setLoading(false);
-  }, [setLoading, setData]);
+  }, [setLoading, setData, setMemoryData]);
 
   const { fetchData, fetchLoading } = useFetch('https://www.themealdb.com/api/json/v1/1/list.php?c=list');
   if (loading) return <p>Carregando...</p>;
@@ -30,7 +34,10 @@ function Recipes() {
               key={ category.strCategory }
               type="button"
               data-testid={ `${category.strCategory}-category-filter` }
-              onClick={ () => handleFilterButton('https://www.themealdb.com/api/json/v1/1/filter.php?c=', category.strCategory, 'meals') }
+              onClick={ () => {
+                handleFilterButton('https://www.themealdb.com/api/json/v1/1/filter.php?c=', category.strCategory, 'meals', category.strCategory);
+                setSearchCategory(category.strCategory);
+              } }
             >
               {category.strCategory}
             </button>

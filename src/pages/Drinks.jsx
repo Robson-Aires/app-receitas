@@ -10,12 +10,16 @@ function Drinks() {
   const number12 = 12;
   const numberOfButtons = 5;
   const { data, setData, setLoading, loading,
-    handleFilterButton, memoryData } = useContext(recipesContext);
+    handleFilterButton, memoryData, setMemoryData,
+    setSearchCategory } = useContext(recipesContext);
   useEffect(() => {
     apiIngredientes()
-      .then((result) => setData(result.drinks));
+      .then((result) => {
+        setData(result.drinks);
+        setMemoryData(result.drinks);
+      });
     setLoading(false);
-  }, [setLoading, setData]);
+  }, [setLoading, setData, setMemoryData]);
 
   const { fetchData, fetchLoading } = useFetch('https://www.thecocktaildb.com/api/json/v1/1/list.php?c=list');
 
@@ -31,7 +35,10 @@ function Drinks() {
               key={ category.strCategory }
               type="button"
               data-testid={ `${category.strCategory}-category-filter` }
-              onClick={ () => handleFilterButton('https://www.thecocktaildb.com/api/json/v1/1/filter.php?c=', category.strCategory, 'drinks') }
+              onClick={ () => {
+                handleFilterButton('https://www.thecocktaildb.com/api/json/v1/1/filter.php?c=', category.strCategory, 'drinks', category.strCategory);
+                setSearchCategory(category.strCategory);
+              } }
             >
               {category.strCategory}
             </button>

@@ -7,20 +7,23 @@ export default function RecipesProvider({ children }) {
   const [radio, setRadio] = useState('ingredient');
   const [loading, setLoading] = useState(true);
   const [memoryData, setMemoryData] = useState([]);
+  const [searchCategory, setSearchCategory] = useState('');
 
-  async function handleFilterButton(url, endpoint, recipe) {
+  const handleFilterButton = async (url, endpoint, recipe, category) => {
     setLoading(true);
     const request = await fetch(`${url}${endpoint}`);
     const response = await request.json();
-    setMemoryData(data);
-    if (recipe === 'meals') {
+
+    if (category === searchCategory) {
+      setData(memoryData);
+    } else if (recipe === 'meals') {
       setData(response.meals);
-    }
-    if (recipe === 'drinks') {
+    } else if (recipe === 'drinks') {
       setData(response.drinks);
     }
     setLoading(false);
-  }
+  };
+
   const values = useMemo(() => ({
     data,
     loading,
@@ -32,6 +35,8 @@ export default function RecipesProvider({ children }) {
     setRadio,
     handleFilterButton,
     memoryData,
+    setMemoryData,
+    setSearchCategory,
   }), [data, inputSearch, radio, loading, memoryData]);
 
   return (
