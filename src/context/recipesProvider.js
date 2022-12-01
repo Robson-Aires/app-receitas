@@ -9,6 +9,7 @@ export default function RecipesProvider({ children }) {
   const [memoryData, setMemoryData] = useState([]);
   const [searchCategory, setSearchCategory] = useState('');
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const handleFilterButton = async (url, endpoint, recipe, category) => {
     setLoading(true);
     const request = await fetch(`${url}${endpoint}`);
@@ -37,7 +38,7 @@ export default function RecipesProvider({ children }) {
     memoryData,
     setMemoryData,
     setSearchCategory,
-  }), [data, inputSearch, radio, loading, memoryData]);
+  }), [data, loading, inputSearch, radio, handleFilterButton, memoryData]);
 
   return (
     <recipesContext.Provider value={ values }>
