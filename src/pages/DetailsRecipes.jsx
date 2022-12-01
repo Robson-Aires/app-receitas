@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import '../styles/recipesDrinks.css';
-import { useParams } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 import useFetch from '../hooks/useFetch';
 import { SearchAPIidrevenue } from '../services/apis';
 
 function DetailsRecipes() {
   const { fetchLoading, fetchData } = useFetch('https://www.thecocktaildb.com/api/json/v1/1/search.php?s=');
   const number6 = 6;
+  const history = useHistory();
 
   const { id } = useParams();
   const [dataMeals, setDataMeals] = useState({ meals: [{}] });
@@ -41,6 +42,12 @@ function DetailsRecipes() {
       .map((ingr, i) => (`${ingr} ${arrMeasures[i]}`));
     setIngredientsMeasures(combineIngMeas);
   }, [dataMeals]);
+
+  const handleSubmit = (target) => {
+    const result = target;
+    history.push(`/meals/${result}/in-progress`);
+  };
+
   return (
     <div>
       {
@@ -109,6 +116,7 @@ function DetailsRecipes() {
           type="button"
           data-testid="start-recipe-btn"
           className="btn-carrosel"
+          onClick={ () => handleSubmit(id) }
         >
           Start Recipe
         </button>
@@ -122,6 +130,8 @@ function DetailsRecipes() {
           Continue Recipe
         </button>
       )}
+      <button type="button" data-testid="share-btn">compartilhar</button>
+      <button type="button" data-testid="favorite-btn">Favoritar</button>
     </div>
   );
 }

@@ -1,17 +1,23 @@
 import React, { useEffect, useState } from 'react';
-
-import { useParams } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 import { SearchAPIidrink } from '../services/apiDrinks';
 import useFetch from '../hooks/useFetch';
+// import recipesContext from '../context/recipesContext';
 
 function DetailsDrinks() {
   const { fetchLoading, fetchData } = useFetch('https://www.themealdb.com/api/json/v1/1/search.php?s=');
+
   const number6 = 6;
+
+  const history = useHistory();
+
   const [progress, setProgress] = useState({ drinks: { id: null } });
 
   const { id } = useParams();
+
   const [dataDrinks, setDataDrinks] = useState({ drinks: [{}] });
   const [ingredientsMeasures, setIngredientsMeasures] = useState([]);
+
   useEffect(() => {
     const ReturnAPIDrinks = async () => {
       setDataDrinks(await SearchAPIidrink(id));
@@ -23,7 +29,6 @@ function DetailsDrinks() {
   }, [id]);
 
   useEffect(() => {
-    console.log(dataDrinks);
     const { drinks } = dataDrinks;
     const arrIngredients = Object
       .entries(drinks[0]).filter(([chave, val]) => chave.includes('strIngredient') && val)
@@ -37,7 +42,13 @@ function DetailsDrinks() {
     setIngredientsMeasures(combineIngMeas);
   }, [dataDrinks]);
 
+  const handleSubmit = (target) => {
+    const result = target;
+    history.push(`/drinks/${result}/in-progress`);
+  };
+
   return (
+
     <div>
       {
         dataDrinks?.drinks?.length > 0 && (
@@ -69,6 +80,7 @@ function DetailsDrinks() {
           </>
         )
       }
+
       { fetchLoading && <p>carregando...</p> }
       <ul className="carrosel-container">
         { !fetchLoading && fetchData.meals?.map((carrosel, index) => (
@@ -96,6 +108,7 @@ function DetailsDrinks() {
         type="button"
         data-testid="start-recipe-btn"
         className="btn-carrosel"
+        onClick={ () => handleSubmit(id) }
       >
         Start Recipe
       </button>
@@ -108,6 +121,8 @@ function DetailsDrinks() {
           Continue Recipe
         </button>
       )}
+      <button type="button" data-testid="share-btn">compartilhar</button>
+      <button type="button" data-testid="favorite-btn">Favoritar</button>
     </div>
   );
 }
