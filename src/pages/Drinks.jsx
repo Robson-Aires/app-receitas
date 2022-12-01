@@ -24,7 +24,7 @@ function Drinks() {
     <div>
       <Header title="Drinks" />
       <ul>
-        {data.map((Ingredient, index) => (
+        {data?.map((Ingredient, index) => (
           index < number12
            && (
              <li
