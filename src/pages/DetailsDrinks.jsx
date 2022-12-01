@@ -7,6 +7,7 @@ import useFetch from '../hooks/useFetch';
 function DetailsDrinks() {
   const { fetchLoading, fetchData } = useFetch('https://www.themealdb.com/api/json/v1/1/search.php?s=');
   const number6 = 6;
+  const [progress, setProgress] = useState({ drinks: { id: null } });
 
   const { id } = useParams();
   const [dataDrinks, setDataDrinks] = useState({ drinks: [{}] });
@@ -14,6 +15,9 @@ function DetailsDrinks() {
   useEffect(() => {
     const ReturnAPIDrinks = async () => {
       setDataDrinks(await SearchAPIidrink(id));
+      const recipesProgress = JSON
+        .parse((localStorage.getItem('inProgressRecipes') || '{"drinks": {"id": null}}'));
+      setProgress(recipesProgress.drinks);
     };
     ReturnAPIDrinks();
   }, [id]);
@@ -95,6 +99,15 @@ function DetailsDrinks() {
       >
         Start Recipe
       </button>
+      { progress[id] && (
+        <button
+          type="button"
+          data-testid="start-recipe-btn"
+          className="btn-carrosel"
+        >
+          Continue Recipe
+        </button>
+      )}
     </div>
   );
 }

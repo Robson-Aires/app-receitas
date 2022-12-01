@@ -12,10 +12,15 @@ function DetailsRecipes() {
   const [dataMeals, setDataMeals] = useState({ meals: [{}] });
   const [ingredientsMeasures, setIngredientsMeasures] = useState([]);
   const [done, setDone] = useState([]);
-
+  const [progress, setProgress] = useState({ meals: { id: null } });
   useEffect(() => {
     const recipesMade = JSON.parse((localStorage.getItem('doneRecipes') || '[]'));
     setDone(recipesMade);
+
+    const recipesProgress = JSON
+      .parse((localStorage.getItem('inProgressRecipes') || '{"meals": {"id": null}}'));
+    setProgress(recipesProgress.meals);
+    console.log('teste', recipesProgress.meals);
 
     const ReturnAPIMeals = async () => {
       const request = await SearchAPIidrevenue(id);
@@ -106,6 +111,15 @@ function DetailsRecipes() {
           className="btn-carrosel"
         >
           Start Recipe
+        </button>
+      )}
+      {progress[id] && (
+        <button
+          type="button"
+          data-testid="start-recipe-btn"
+          className="btn-carrosel"
+        >
+          Continue Recipe
         </button>
       )}
     </div>
