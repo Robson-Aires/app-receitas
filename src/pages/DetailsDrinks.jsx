@@ -2,12 +2,15 @@ import React, { useEffect, useState } from 'react';
 
 import { useParams } from 'react-router-dom';
 import { SearchAPIidrink } from '../services/apiDrinks';
+import useFetch from '../hooks/useFetch';
 
 function DetailsDrinks() {
+  const { fetchLoading, fetchData } = useFetch('https://www.themealdb.com/api/json/v1/1/search.php?s=');
+  const number6 = 6;
+
   const { id } = useParams();
   const [dataDrinks, setDataDrinks] = useState({ drinks: [{}] });
   const [ingredientsMeasures, setIngredientsMeasures] = useState([]);
-  // a função abaixo fiz apenas para fazer a requisição da API para me entregar o ID, sinta-se livre para refatorar se quiser.
   useEffect(() => {
     const ReturnAPIDrinks = async () => {
       setDataDrinks(await SearchAPIidrink(id));
@@ -62,6 +65,29 @@ function DetailsDrinks() {
           </>
         )
       }
+      { fetchLoading && <p>carregando...</p> }
+      <ul className="carrosel-container">
+        { !fetchLoading && fetchData.meals?.map((carrosel, index) => (
+          index < number6
+           && (
+             <li
+               data-testid={ `${index}-recommendation-card` }
+               key={ index }
+             >
+               <p
+                 data-testid={ `${index}-recommendation-title` }
+               >
+                 { carrosel.strMeal }
+               </p>
+               <input
+                 className="img-carrosel"
+                 type="image"
+                 src={ carrosel.strMealThumb }
+                 alt="asd"
+               />
+             </li>
+           )))}
+      </ul>
     </div>
   );
 }

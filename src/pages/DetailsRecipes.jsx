@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from 'react';
-
+import '../styles/recipesDrinks.css';
 import { useParams } from 'react-router-dom';
+import useFetch from '../hooks/useFetch';
 import { SearchAPIidrevenue } from '../services/apis';
 
 function DetailsRecipes() {
+  const { fetchLoading, fetchData } = useFetch('https://www.thecocktaildb.com/api/json/v1/1/search.php?s=');
+  const number6 = 6;
+
   const { id } = useParams();
   const [dataMeals, setDataMeals] = useState({ meals: [{}] });
   const [ingredientsMeasures, setIngredientsMeasures] = useState([]);
-  // a função abaixo fiz apenas para fazer a requisição da API para me entregar o ID, sinta-se livre para refatorar se quiser.
   useEffect(() => {
     const ReturnAPIMeals = async () => {
       const request = await SearchAPIidrevenue(id);
@@ -70,6 +73,29 @@ function DetailsRecipes() {
         allowFullScreen
         ng-show="showvideo"
       />
+      { fetchLoading && <p>carregando...</p> }
+      <ul className="carrosel-container">
+        { !fetchLoading && fetchData.drinks?.map((carrosel, index) => (
+          index < number6
+           && (
+             <li
+               data-testid={ `${index}-recommendation-card` }
+               key={ index }
+             >
+               <p
+                 data-testid={ `${index}-recommendation-title` }
+               >
+                 { carrosel.strDrink }
+               </p>
+               <input
+                 className="img-carrosel"
+                 type="image"
+                 src={ carrosel.strDrinkThumb }
+                 alt="asd"
+               />
+             </li>
+           )))}
+      </ul>
     </div>
   );
 }
