@@ -13,7 +13,7 @@ const testidBtnSearchTop = 'search-top-btn';
 const testidBtnSearch = 'exec-search-btn';
 const testidInputSearch = 'search-input';
 
-describe('Testa Search Header', () => {
+describe('Testa componente Search Header', () => {
   it('Verifica inputs na page meals', async () => {
     const { history } = renderWithRouter(<App />);
 
@@ -136,7 +136,7 @@ describe('Testa Search Header', () => {
   });
 });
 
-describe('Testa Search Header', () => {
+describe('Testa Search Header Component', () => {
   it('Verifica inputs na page drinks', async () => {
     const { history } = renderWithRouter(<App />);
 
@@ -258,7 +258,7 @@ describe('Testa Search Header', () => {
     await new Promise((r) => { setTimeout(r, 2000); });
   });
 
-  describe('Testa Search Header', () => {
+  describe('Testa Search Header Component', () => {
     it('Verifica o funcionamento do alert', async () => {
       const { history } = renderWithRouter(<App />);
 
@@ -270,7 +270,7 @@ describe('Testa Search Header', () => {
       const btnSearch = screen.getByTestId(testidBtnSearch);
       expect(btnSearch).toBeInTheDocument();
 
-      const btnSearchTop = screen.getByTestId('search-top-btn');
+      const btnSearchTop = screen.getByTestId(testidBtnSearchTop);
       expect(btnSearchTop).toBeInTheDocument();
 
       userEvent.click(btnSearchTop);
@@ -297,7 +297,7 @@ describe('Testa Search Header', () => {
 
     act(() => { history.push('/drinks'); });
 
-    const btnSearchTop = screen.getByTestId('search-top-btn');
+    const btnSearchTop = screen.getByTestId(testidBtnSearchTop);
     expect(btnSearchTop).toBeInTheDocument();
 
     userEvent.click(btnSearchTop);
@@ -324,7 +324,7 @@ describe('Testa Search Header', () => {
 
     act(() => { history.push('/meals'); });
 
-    const btnSearchTop = screen.getByTestId('search-top-btn');
+    const btnSearchTop = screen.getByTestId(testidBtnSearchTop);
     expect(btnSearchTop).toBeInTheDocument();
 
     userEvent.click(btnSearchTop);
