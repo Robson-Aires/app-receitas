@@ -21,7 +21,6 @@ function Recipes() {
         setMemoryData(result.meals);
       });
     setLoading(false);
-
   }, [setLoading, setData, setMemoryData]);
 
   const handleSubmit = (target) => {
