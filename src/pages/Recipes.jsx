@@ -8,6 +8,8 @@ import useFetch from '../hooks/useFetch';
 import { apiIngredient } from '../services/apis';
 
 function Recipes() {
+  const { fetchData, fetchLoading } = useFetch('https://www.themealdb.com/api/json/v1/1/list.php?c=list');
+
   const history = useHistory();
   const number12 = 12;
   const numberOfButtons = 5;
@@ -27,7 +29,6 @@ function Recipes() {
     const result = target;
     history.push(`/meals/${result}`);
   };
-  const { fetchData, fetchLoading } = useFetch('https://www.themealdb.com/api/json/v1/1/list.php?c=list');
 
   if (loading) return <p>Carregando...</p>;
   return (

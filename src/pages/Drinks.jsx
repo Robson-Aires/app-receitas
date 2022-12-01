@@ -7,6 +7,8 @@ import { apiIngredientes } from '../services/apiDrinks';
 import useFetch from '../hooks/useFetch';
 
 function Drinks() {
+  const { fetchData, fetchLoading } = useFetch('https://www.thecocktaildb.com/api/json/v1/1/list.php?c=list');
+
   const history = useHistory();
   const number12 = 12;
   const numberOfButtons = 5;
@@ -21,8 +23,6 @@ function Drinks() {
       });
     setLoading(false);
   }, [setLoading, setData, setMemoryData]);
-
-  const { fetchData, fetchLoading } = useFetch('https://www.thecocktaildb.com/api/json/v1/1/list.php?c=list');
 
   if (loading) return <p>Carregando...</p>;
 
