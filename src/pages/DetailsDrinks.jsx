@@ -88,6 +88,13 @@ function DetailsDrinks() {
              </li>
            )))}
       </ul>
+      <button
+        type="button"
+        data-testid="start-recipe-btn"
+        className="btn-carrosel"
+      >
+        Start Recipe
+      </button>
     </div>
   );
 }

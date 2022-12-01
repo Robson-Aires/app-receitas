@@ -11,7 +11,12 @@ function DetailsRecipes() {
   const { id } = useParams();
   const [dataMeals, setDataMeals] = useState({ meals: [{}] });
   const [ingredientsMeasures, setIngredientsMeasures] = useState([]);
+  const [done, setDone] = useState([]);
+
   useEffect(() => {
+    const recipesMade = JSON.parse((localStorage.getItem('doneRecipes') || '[]'));
+    setDone(recipesMade);
+
     const ReturnAPIMeals = async () => {
       const request = await SearchAPIidrevenue(id);
       setDataMeals(request);
@@ -20,7 +25,6 @@ function DetailsRecipes() {
   }, [id]);
 
   useEffect(() => {
-    // console.log(dataMeals);
     const { meals } = dataMeals;
     const arrIngredients = Object
       .entries(meals[0]).filter(([chave, val]) => chave.includes('strIngredient') && val)
@@ -30,7 +34,6 @@ function DetailsRecipes() {
       .map((el) => el[1]);
     const combineIngMeas = arrIngredients
       .map((ingr, i) => (`${ingr} ${arrMeasures[i]}`));
-    // console.log(combineIngMeas);
     setIngredientsMeasures(combineIngMeas);
   }, [dataMeals]);
   return (
@@ -96,6 +99,15 @@ function DetailsRecipes() {
              </li>
            )))}
       </ul>
+      {done.every((e) => e.id !== id) && (
+        <button
+          type="button"
+          data-testid="start-recipe-btn"
+          className="btn-carrosel"
+        >
+          Start Recipe
+        </button>
+      )}
     </div>
   );
 }
