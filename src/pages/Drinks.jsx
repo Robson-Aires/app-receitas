@@ -11,8 +11,8 @@ function Drinks() {
   const number12 = 12;
   const numberOfButtons = 5;
   const { data, setData, setLoading, loading,
-    handleFilterButton, memoryData, setMemoryData,
-    setSearchCategory } = useContext(recipesContext);
+    handleFilterButton, memoryData, setMemoryData, setToggle, toggle,
+  } = useContext(recipesContext);
   useEffect(() => {
     apiIngredientes()
       .then((result) => {
@@ -42,8 +42,8 @@ function Drinks() {
               type="button"
               data-testid={ `${category.strCategory}-category-filter` }
               onClick={ () => {
-                handleFilterButton('https://www.thecocktaildb.com/api/json/v1/1/filter.php?c=', category.strCategory, 'drinks', category.strCategory);
-                setSearchCategory(category.strCategory);
+                handleFilterButton('https://www.thecocktaildb.com/api/json/v1/1/filter.php?c=', category.strCategory, 'drinks');
+                setToggle(!toggle);
               } }
             >
               {category.strCategory}

@@ -7,20 +7,20 @@ export default function RecipesProvider({ children }) {
   const [radio, setRadio] = useState('ingredient');
   const [loading, setLoading] = useState(true);
   const [memoryData, setMemoryData] = useState([]);
-  const [searchCategory, setSearchCategory] = useState('');
+  const [toggle, setToggle] = useState(true);
 
   const values = useMemo(() => {
-    const handleFilterButton = async (url, endpoint, recipe, category) => {
+    const handleFilterButton = async (url, endpoint, recipe) => {
       setLoading(true);
       const request = await fetch(`${url}${endpoint}`);
       const response = await request.json();
 
-      if (category === searchCategory) {
-        setData(memoryData);
-      } else if (recipe === 'meals') {
+      if (recipe === 'meals' && toggle) {
         setData(response.meals);
-      } else if (recipe === 'drinks') {
+      } else if (recipe === 'drinks' && toggle) {
         setData(response.drinks);
+      } else {
+        setData(memoryData);
       }
       setLoading(false);
     };
@@ -36,8 +36,10 @@ export default function RecipesProvider({ children }) {
       handleFilterButton,
       memoryData,
       setMemoryData,
-      setSearchCategory };
-  }, [data, loading, inputSearch, radio, memoryData, searchCategory]);
+      setToggle,
+      toggle,
+    };
+  }, [data, loading, inputSearch, radio, memoryData, toggle]);
 
   return (
     <recipesContext.Provider value={ values }>
