@@ -1,11 +1,17 @@
 .carrosel-container {
   display: flex;
   gap: 10px;
-  width: 90%;
   overflow-y: auto;
+  width: 90%;
 }
 
 .img-carrosel {
-  width: 150px;
   padding: 5px;
+  width: 150px;
+}
+
+.btn-carrosel {
+  background: none;
+  bottom: 0;
+  position: fixed;
 }
