@@ -9,7 +9,8 @@ import useFetch from '../hooks/useFetch';
 function Drinks() {
   const number12 = 12;
   const numberOfButtons = 5;
-  const { data, setData, setLoading, loading } = useContext(recipesContext);
+  const { data, setData, setLoading, loading,
+    handleFilterButton, memoryData } = useContext(recipesContext);
   useEffect(() => {
     apiIngredientes()
       .then((result) => setData(result.drinks));
@@ -30,11 +31,19 @@ function Drinks() {
               key={ category.strCategory }
               type="button"
               data-testid={ `${category.strCategory}-category-filter` }
+              onClick={ () => handleFilterButton('https://www.thecocktaildb.com/api/json/v1/1/filter.php?c=', category.strCategory, 'drinks') }
             >
               {category.strCategory}
             </button>
           )
         )))}
+      <button
+        type="button"
+        data-testid="All-category-filter"
+        onClick={ () => setData(memoryData) }
+      >
+        All
+      </button>
       <ul>
         {data.map((Ingredient, index) => (
           index < number12

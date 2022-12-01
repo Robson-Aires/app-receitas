@@ -9,7 +9,8 @@ import { apiIngredient } from '../services/apis';
 function Recipes() {
   const number12 = 12;
   const numberOfButtons = 5;
-  const { data, setData, setLoading, loading } = useContext(recipesContext);
+  const { data, setData, setLoading, loading,
+    handleFilterButton, memoryData } = useContext(recipesContext);
   useEffect(() => {
     apiIngredient()
       .then((result) => setData(result.meals));
@@ -29,11 +30,19 @@ function Recipes() {
               key={ category.strCategory }
               type="button"
               data-testid={ `${category.strCategory}-category-filter` }
+              onClick={ () => handleFilterButton('https://www.themealdb.com/api/json/v1/1/filter.php?c=', category.strCategory, 'meals') }
             >
               {category.strCategory}
             </button>
           )
         )))}
+      <button
+        type="button"
+        data-testid="All-category-filter"
+        onClick={ () => setData(memoryData) }
+      >
+        All
+      </button>
       <ul>
         {data.map((Ingredient, index) => (
           index < number12

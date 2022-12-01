@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 export default function useFetch(url, endpoint) {
   const [fetchLoading, setFetchLoading] = useState(true);
   const [fetchData, setFetchData] = useState([]);
-  //   const [memeryData, setMemeryData] = useState([]);
+  const [memeryData, setMemeryData] = useState([]);
   useEffect(() => {
     const fetchResponse = async () => {
       if (endpoint) {
@@ -21,5 +21,5 @@ export default function useFetch(url, endpoint) {
     fetchResponse();
   }, [url, endpoint]);
 
-  return { fetchLoading, fetchData, setFetchData };
+  return { fetchLoading, fetchData, setFetchData, memeryData, setMemeryData };
 }
