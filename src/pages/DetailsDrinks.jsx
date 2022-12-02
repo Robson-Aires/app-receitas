@@ -3,6 +3,10 @@ import { useParams, useHistory } from 'react-router-dom';
 import { SearchAPIidrink } from '../services/apiDrinks';
 import useFetch from '../hooks/useFetch';
 // import recipesContext from '../context/recipesContext';
+import shareIcon from '../images/shareIcon.svg';
+import '../styles/Details.css';
+
+const copy = require('clipboard-copy');
 
 function DetailsDrinks() {
   const { fetchLoading, fetchData } = useFetch('https://www.themealdb.com/api/json/v1/1/search.php?s=');
@@ -17,6 +21,7 @@ function DetailsDrinks() {
 
   const [dataDrinks, setDataDrinks] = useState({ drinks: [{}] });
   const [ingredientsMeasures, setIngredientsMeasures] = useState([]);
+  const [message, setMessage] = useState(false);
 
   useEffect(() => {
     const ReturnAPIDrinks = async () => {
@@ -45,6 +50,14 @@ function DetailsDrinks() {
   const handleSubmit = (target) => {
     const result = target;
     history.push(`/drinks/${result}/in-progress`);
+  };
+
+  const handleShare = async () => {
+    setMessage(true);
+    const copied = `http://localhost:3000${history.location.pathname}`;
+    console.log(copied);
+    const resul = await copy(copied);
+    console.log(resul);
   };
 
   return (
@@ -81,6 +94,12 @@ function DetailsDrinks() {
         )
       }
 
+      <button type="button" data-testid="share-btn" onClick={ handleShare }>
+        <img src={ shareIcon } alt="compartilhar" />
+      </button>
+      {message && <p>Link copied!</p>}
+      <br />
+
       { fetchLoading && <p>carregando...</p> }
       <ul className="carrosel-container">
         { !fetchLoading && fetchData.meals?.map((carrosel, index) => (
@@ -107,7 +126,7 @@ function DetailsDrinks() {
       <button
         type="button"
         data-testid="start-recipe-btn"
-        className="btn-carrosel"
+        className="btn-carrosel start"
         onClick={ () => handleSubmit(id) }
       >
         Start Recipe
@@ -116,12 +135,12 @@ function DetailsDrinks() {
         <button
           type="button"
           data-testid="start-recipe-btn"
-          className="btn-carrosel"
+          className="btn-carrosel continue"
         >
           Continue Recipe
         </button>
       )}
-      <button type="button" data-testid="share-btn">compartilhar</button>
+
       <button type="button" data-testid="favorite-btn">Favoritar</button>
     </div>
   );
