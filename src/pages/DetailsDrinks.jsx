@@ -126,7 +126,7 @@ function DetailsDrinks() {
       <button
         type="button"
         data-testid="start-recipe-btn"
-        className="btn-carrosel start"
+        className="btn-carrosel"
         onClick={ () => handleSubmit(id) }
       >
         Start Recipe
