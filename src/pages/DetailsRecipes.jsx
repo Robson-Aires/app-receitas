@@ -4,6 +4,8 @@ import { useParams, useHistory } from 'react-router-dom';
 import useFetch from '../hooks/useFetch';
 import { SearchAPIidrevenue } from '../services/apis';
 import shareIcon from '../images/shareIcon.svg';
+import whiteHeartIcon from '../images/whiteHeartIcon.svg';
+import blackHeartIcon from '../images/blackHeartIcon.svg';
 
 const copy = require('clipboard-copy');
 
@@ -18,6 +20,7 @@ function DetailsRecipes() {
   const [ingredientsMeasures, setIngredientsMeasures] = useState([]);
   const [done, setDone] = useState([]);
   const [progress, setProgress] = useState({ meals: { id: null } });
+  const [localFavorite, setLocalFavorite] = useState(false);
   useEffect(() => {
     const recipesMade = JSON.parse((localStorage.getItem('doneRecipes') || '[]'));
     setDone(recipesMade);
@@ -32,6 +35,13 @@ function DetailsRecipes() {
       setDataMeals(request);
     };
     ReturnAPIMeals();
+    const local = JSON.parse(localStorage.getItem('favoriteRecipes') || '[]');
+    console.log(local);
+    if (local.find((e) => e.id === id)) {
+      setLocalFavorite(true);
+    } else {
+      setLocalFavorite(false);
+    }
   }, [id]);
 
   useEffect(() => {
@@ -63,17 +73,24 @@ function DetailsRecipes() {
   const handleFavorite = () => {
     const local = JSON.parse(localStorage.getItem('favoriteRecipes') || '[]');
     console.log(dataMeals, local);
-    const obj = {
-      id: dataMeals.meals[0].idMeal,
-      type: 'meal',
-      nationality: dataMeals.meals[0].strArea,
-      category: dataMeals.meals[0].strCategory,
-      alcoholicOrNot: '',
-      name: dataMeals.meals[0].strMeal,
-      image: dataMeals.meals[0].strMealThumb,
-    };
-    // console.log(dataMeals, local, obj);
-    localStorage.setItem('favoriteRecipes', JSON.stringify([...local, obj]));
+    if (local.find((e) => e.id === id)) {
+      const arr = local.filter((e) => e.id !== id);
+      localStorage.setItem('favoriteRecipes', JSON.stringify(arr));
+      setLocalFavorite(false);
+    } else {
+      const obj = {
+        id: dataMeals.meals[0].idMeal,
+        type: 'meal',
+        nationality: dataMeals.meals[0].strArea,
+        category: dataMeals.meals[0].strCategory,
+        alcoholicOrNot: '',
+        name: dataMeals.meals[0].strMeal,
+        image: dataMeals.meals[0].strMealThumb,
+      };
+      // console.log(dataMeals, local, obj);
+      localStorage.setItem('favoriteRecipes', JSON.stringify([...local, obj]));
+      setLocalFavorite(true);
+    }
   };
 
   return (
@@ -166,10 +183,13 @@ function DetailsRecipes() {
       )}
       <button
         type="button"
-        data-testid="favorite-btn"
         onClick={ handleFavorite }
       >
-        Favoritar
+        <img
+          data-testid="favorite-btn"
+          src={ localFavorite ? blackHeartIcon : whiteHeartIcon }
+          alt=""
+        />
 
       </button>
       <br />
