@@ -287,8 +287,14 @@ describe('Testa Search Header Component', () => {
 });
 
 describe('Testa Search Header', () => {
-  afterEach(() => { jest.resetAllMocks(); });
-  beforeEach(() => { jest.resetAllMocks(); });
+  beforeEach(() => {
+    jest.resetAllMocks();
+    jest.clearAllMocks();
+  });
+  afterEach(() => {
+    jest.resetAllMocks();
+    jest.clearAllMocks();
+  });
 
   it('Verifica o funcionamento da page drink ', async () => {
     jest.spyOn(global, 'fetch'); global.fetch.mockResolvedValue({ json: jest.fn().mockResolvedValue(oneDrink) });
