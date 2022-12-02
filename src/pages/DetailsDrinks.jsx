@@ -4,6 +4,8 @@ import { SearchAPIidrink } from '../services/apiDrinks';
 import useFetch from '../hooks/useFetch';
 // import recipesContext from '../context/recipesContext';
 import shareIcon from '../images/shareIcon.svg';
+import whiteHeartIcon from '../images/whiteHeartIcon.svg';
+import blackHeartIcon from '../images/blackHeartIcon.svg';
 
 const copy = require('clipboard-copy');
 
@@ -21,6 +23,7 @@ function DetailsDrinks() {
   const [dataDrinks, setDataDrinks] = useState({ drinks: [{}] });
   const [ingredientsMeasures, setIngredientsMeasures] = useState([]);
   const [message, setMessage] = useState(false);
+  const [localFavorite, setLocalFavorite] = useState(false);
 
   useEffect(() => {
     const ReturnAPIDrinks = async () => {
@@ -30,6 +33,13 @@ function DetailsDrinks() {
       setProgress(recipesProgress.drinks);
     };
     ReturnAPIDrinks();
+    const local = JSON.parse(localStorage.getItem('favoriteRecipes') || '[]');
+    console.log(local);
+    if (local.find((e) => e.id === id)) {
+      setLocalFavorite(true);
+    } else {
+      setLocalFavorite(false);
+    }
   }, [id]);
 
   useEffect(() => {
@@ -62,17 +72,24 @@ function DetailsDrinks() {
   const handleFavorite = () => {
     const local = JSON.parse(localStorage.getItem('favoriteRecipes') || '[]');
     console.log(dataDrinks, local);
-    const obj = {
-      id: dataDrinks.drinks[0].idDrink,
-      type: 'drink',
-      nationality: '',
-      category: dataDrinks.drinks[0].strCategory,
-      alcoholicOrNot: dataDrinks.drinks[0].strAlcoholic,
-      name: dataDrinks.drinks[0].strDrink,
-      image: dataDrinks.drinks[0].strDrinkThumb,
-    };
-    // console.log(dataMeals, local, obj);
-    localStorage.setItem('favoriteRecipes', JSON.stringify([...local, obj]));
+    if (local.find((e) => e.id === id)) {
+      const arr = local.filter((e) => e.id !== id);
+      localStorage.setItem('favoriteRecipes', JSON.stringify(arr));
+      setLocalFavorite(false);
+    } else {
+      const obj = {
+        id: dataDrinks.drinks[0].idDrink,
+        type: 'drink',
+        nationality: '',
+        category: dataDrinks.drinks[0].strCategory,
+        alcoholicOrNot: dataDrinks.drinks[0].strAlcoholic,
+        name: dataDrinks.drinks[0].strDrink,
+        image: dataDrinks.drinks[0].strDrinkThumb,
+      };
+      // console.log(dataMeals, local, obj);
+      localStorage.setItem('favoriteRecipes', JSON.stringify([...local, obj]));
+      setLocalFavorite(true);
+    }
   };
 
   return (
@@ -158,10 +175,13 @@ function DetailsDrinks() {
 
       <button
         type="button"
-        data-testid="favorite-btn"
         onClick={ handleFavorite }
       >
-        Favoritar
+        <img
+          data-testid="favorite-btn"
+          src={ localFavorite ? blackHeartIcon : whiteHeartIcon }
+          alt=""
+        />
 
       </button>
       <br />
