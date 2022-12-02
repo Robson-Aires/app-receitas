@@ -4,7 +4,6 @@ import { SearchAPIidrink } from '../services/apiDrinks';
 import useFetch from '../hooks/useFetch';
 // import recipesContext from '../context/recipesContext';
 import shareIcon from '../images/shareIcon.svg';
-import '../styles/Details.css';
 
 const copy = require('clipboard-copy');
 
@@ -58,6 +57,22 @@ function DetailsDrinks() {
     console.log(copied);
     const resul = await copy(copied);
     console.log(resul);
+  };
+
+  const handleFavorite = () => {
+    const local = JSON.parse(localStorage.getItem('favoriteRecipes') || '[]');
+    console.log(dataDrinks, local);
+    const obj = {
+      id: dataDrinks.drinks[0].idDrink,
+      type: 'drink',
+      nationality: '',
+      category: dataDrinks.drinks[0].strCategory,
+      alcoholicOrNot: dataDrinks.drinks[0].strAlcoholic,
+      name: dataDrinks.drinks[0].strDrink,
+      image: dataDrinks.drinks[0].strDrinkThumb,
+    };
+    // console.log(dataMeals, local, obj);
+    localStorage.setItem('favoriteRecipes', JSON.stringify([...local, obj]));
   };
 
   return (
@@ -126,7 +141,7 @@ function DetailsDrinks() {
       <button
         type="button"
         data-testid="start-recipe-btn"
-        className="btn-carrosel start"
+        className="btn-carrosel"
         onClick={ () => handleSubmit(id) }
       >
         Start Recipe
@@ -135,13 +150,23 @@ function DetailsDrinks() {
         <button
           type="button"
           data-testid="start-recipe-btn"
-          className="btn-carrosel continue"
+          className="btn-carrosel"
         >
           Continue Recipe
         </button>
       )}
 
-      <button type="button" data-testid="favorite-btn">Favoritar</button>
+      <button
+        type="button"
+        data-testid="favorite-btn"
+        onClick={ handleFavorite }
+      >
+        Favoritar
+
+      </button>
+      <br />
+      <br />
+      <br />
     </div>
   );
 }

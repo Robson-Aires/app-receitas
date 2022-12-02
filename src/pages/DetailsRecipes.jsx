@@ -60,6 +60,22 @@ function DetailsRecipes() {
     console.log(resul);
   };
 
+  const handleFavorite = () => {
+    const local = JSON.parse(localStorage.getItem('favoriteRecipes') || '[]');
+    console.log(dataMeals, local);
+    const obj = {
+      id: dataMeals.meals[0].idMeal,
+      type: 'meal',
+      nationality: dataMeals.meals[0].strArea,
+      category: dataMeals.meals[0].strCategory,
+      alcoholicOrNot: '',
+      name: dataMeals.meals[0].strMeal,
+      image: dataMeals.meals[0].strMealThumb,
+    };
+    // console.log(dataMeals, local, obj);
+    localStorage.setItem('favoriteRecipes', JSON.stringify([...local, obj]));
+  };
+
   return (
     <div>
       {
@@ -148,7 +164,17 @@ function DetailsRecipes() {
           Continue Recipe
         </button>
       )}
-      <button type="button" data-testid="favorite-btn">Favoritar</button>
+      <button
+        type="button"
+        data-testid="favorite-btn"
+        onClick={ handleFavorite }
+      >
+        Favoritar
+
+      </button>
+      <br />
+      <br />
+      <br />
     </div>
   );
 }
