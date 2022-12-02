@@ -12,7 +12,7 @@
 
 
 .btn-carrosel {
-  background: none;
-  position: fixed;
   bottom: 0;
+  position: fixed;
+  background: none;
 }
