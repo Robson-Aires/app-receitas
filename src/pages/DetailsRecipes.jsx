@@ -3,11 +3,15 @@ import '../styles/recipesDrinks.css';
 import { useParams, useHistory } from 'react-router-dom';
 import useFetch from '../hooks/useFetch';
 import { SearchAPIidrevenue } from '../services/apis';
+import shareIcon from '../images/shareIcon.svg';
+
+const copy = require('clipboard-copy');
 
 function DetailsRecipes() {
   const { fetchLoading, fetchData } = useFetch('https://www.thecocktaildb.com/api/json/v1/1/search.php?s=');
   const number6 = 6;
   const history = useHistory();
+  const [message, setMessage] = useState(false);
 
   const { id } = useParams();
   const [dataMeals, setDataMeals] = useState({ meals: [{}] });
@@ -48,6 +52,14 @@ function DetailsRecipes() {
     history.push(`/meals/${result}/in-progress`);
   };
 
+  const handleShare = async () => {
+    setMessage(true);
+    const copied = `http://localhost:3000${history.location.pathname}`;
+    console.log(copied);
+    const resul = await copy(copied);
+    console.log(resul);
+  };
+
   return (
     <div>
       {
@@ -78,6 +90,11 @@ function DetailsRecipes() {
           </>
         )
       }
+      <button type="button" data-testid="share-btn" onClick={ handleShare }>
+        <img src={ shareIcon } alt="compartilhar" />
+      </button>
+      {message && <p>Link copied!</p>}
+      <br />
       <iframe
         data-testid="video"
         title="This is a unique title"
@@ -88,6 +105,7 @@ function DetailsRecipes() {
         allowFullScreen
         ng-show="showvideo"
       />
+
       { fetchLoading && <p>carregando...</p> }
       <ul className="carrosel-container">
         { !fetchLoading && fetchData.drinks?.map((carrosel, index) => (
@@ -130,7 +148,6 @@ function DetailsRecipes() {
           Continue Recipe
         </button>
       )}
-      <button type="button" data-testid="share-btn">compartilhar</button>
       <button type="button" data-testid="favorite-btn">Favoritar</button>
     </div>
   );
