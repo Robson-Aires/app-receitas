@@ -1,16 +1,23 @@
 import React, { useEffect, useState } from 'react';
 
-import { useParams } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import useFetch from '../hooks/useFetch';
+import whiteHeartIcon from '../images/whiteHeartIcon.svg';
+import blackHeartIcon from '../images/blackHeartIcon.svg';
 
 const objStyle = { textDecoration: 'line-through solid rgb(0, 0, 0)' };
 const objNone = { textDecoration: 'none' };
 const strObjLocal = '{"drinks": {}, "meals": {}}';
 
+const copy = require('clipboard-copy');
+
 function DrinksProgress() {
   const { id } = useParams();
   const { fetchData, fetchLoading } = useFetch(`https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=${id}`);
   const [objChks, setObjChks] = useState({});
+  const [message, setMessage] = useState(false);
+  const history = useHistory();
+  const [localFavorite, setLocalFavorite] = useState(false);
 
   useEffect(() => {
     const local = JSON
@@ -22,7 +29,21 @@ function DrinksProgress() {
     }), {});
     // console.log(objLocal, local);
     setObjChks(objLocal);
+    const localFav = JSON.parse(localStorage.getItem('favoriteRecipes') || '[]');
+    // console.log(local);
+    if (localFav.find((e) => e.id === id)) {
+      setLocalFavorite(true);
+    } else {
+      setLocalFavorite(false);
+    }
   }, [id]);
+
+  const handleShare = async () => {
+    setMessage(true);
+    const copied = `http://localhost:3000${history.location.pathname.split('/in-')[0]}`;
+    console.log(copied);
+    copy(copied);
+  };
 
   const hendleCheckbox = ({ target }) => {
     const local = JSON
@@ -40,6 +61,28 @@ function DrinksProgress() {
     localStorage.setItem('inProgressRecipes', JSON.stringify({ ...local, drinks }));
   };
 
+  const handleFavorite = () => {
+    const local = JSON.parse(localStorage.getItem('favoriteRecipes') || '[]');
+    if (local.find((e) => e.id === id)) {
+      const arr = local.filter((e) => e.id !== id);
+      localStorage.setItem('favoriteRecipes', JSON.stringify(arr));
+      setLocalFavorite(false);
+    } else {
+      const obj = {
+        id: fetchData?.drinks[0]?.idDrink,
+        type: 'drink',
+        nationality: '',
+        category: fetchData?.drinks[0]?.strCategory,
+        alcoholicOrNot: fetchData?.drinks[0]?.strAlcoholic,
+        name: fetchData?.drinks[0]?.strDrink,
+        image: fetchData?.drinks[0]?.strDrinkThumb,
+      };
+      // console.log(dataMeals, local, obj);
+      localStorage.setItem('favoriteRecipes', JSON.stringify([...local, obj]));
+      setLocalFavorite(true);
+    }
+  };
+
   // console.log(fetchData?.meals[0]);
   if (fetchLoading) { return <p>Carregando...</p>; }
   return (
@@ -50,8 +93,26 @@ function DrinksProgress() {
         data-testid="recipe-photo"
       />
       <h4 data-testid="recipe-title">{fetchData?.drinks[0]?.strDrink}</h4>
-      <button data-testid="share-btn" type="button">Share</button>
-      <button data-testid="favorite-btn" type="button">Fav</button>
+      {message && <p>Link copied!</p>}
+      <button
+        data-testid="share-btn"
+        type="button"
+        onClick={ handleShare }
+      >
+        Share
+
+      </button>
+      <button
+        type="button"
+        onClick={ handleFavorite }
+      >
+        <img
+          data-testid="favorite-btn"
+          src={ localFavorite ? blackHeartIcon : whiteHeartIcon }
+          alt=""
+        />
+
+      </button>
       <p data-testid="recipe-category">{fetchData?.drinks[0]?.strCategory}</p>
       <p data-testid="instructions">{fetchData?.drinks[0]?.strInstructions}</p>
       <div className="checkboxes" style={ { display: 'flex', flexDirection: 'column' } }>
