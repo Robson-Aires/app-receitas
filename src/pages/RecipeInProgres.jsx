@@ -11,6 +11,8 @@ const strObjLocal = '{"drinks": {}, "meals": {}}';
 
 const copy = require('clipboard-copy');
 
+const MAX_INGRED = 20;
+
 function RecipeInProgres() {
   const { id } = useParams();
   const { fetchData, fetchLoading } = useFetch(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${id}`);
@@ -18,6 +20,8 @@ function RecipeInProgres() {
   const [message, setMessage] = useState(false);
   const history = useHistory();
   const [localFavorite, setLocalFavorite] = useState(false);
+  const [isDisabled, setIsDisabled] = useState(true);
+  const [numIngred, setNumIngred] = useState(MAX_INGRED);
 
   useEffect(() => {
     const local = JSON
@@ -37,6 +41,23 @@ function RecipeInProgres() {
       setLocalFavorite(false);
     }
   }, [id]);
+
+  useEffect(() => {
+    if (!Array.isArray(fetchData) && fetchData) {
+      const num = Object.entries(fetchData?.meals[0])
+        .filter(([chv, val]) => chv.includes('strIngredient') && val).length;
+      setNumIngred(num);
+    }
+    console.log(fetchData);
+  }, [fetchData]);
+
+  useEffect(() => {
+    if (Object.values(objChks).filter((el) => el).length === numIngred) {
+      setIsDisabled(false);
+    } else {
+      setIsDisabled(true);
+    }
+  }, [objChks, numIngred]);
 
   const handleShare = async () => {
     setMessage(true);
@@ -82,6 +103,24 @@ function RecipeInProgres() {
       localStorage.setItem('favoriteRecipes', JSON.stringify([...local, obj]));
       setLocalFavorite(true);
     }
+  };
+
+  const handleFinish = () => {
+    const local = JSON.parse(localStorage.getItem('doneRecipes ') || '[]');
+    const obj = {
+      id: fetchData?.meals[0]?.idMeal,
+      nationality: fetchData?.meals[0]?.strArea,
+      name: fetchData?.meals[0]?.strMeal,
+      category: fetchData?.meals[0]?.strCategory,
+      image: fetchData?.meals[0]?.strMealThumb,
+      tags: (fetchData?.meals[0]?.strTags?.split(',') || []),
+      alcoholicOrNot: '',
+      type: 'meal',
+      doneDate: new Date().toISOString(),
+    };
+    console.log(obj, 'antes de salvar no local', local);
+    localStorage.setItem('doneRecipes', JSON.stringify([...local, obj]));
+    history.push('/done-recipes');
   };
 
   // console.log(fetchData);
@@ -136,7 +175,15 @@ function RecipeInProgres() {
           )) }
 
       </div>
-      <button data-testid="finish-recipe-btn" type="button">Finalizar</button>
+      <button
+        data-testid="finish-recipe-btn"
+        type="button"
+        disabled={ isDisabled }
+        onClick={ handleFinish }
+      >
+        Finalizar
+
+      </button>
     </div>
   );
 }

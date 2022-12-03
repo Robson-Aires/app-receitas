@@ -11,6 +11,8 @@ const strObjLocal = '{"drinks": {}, "meals": {}}';
 
 const copy = require('clipboard-copy');
 
+const MAX_INGRED = 20;
+
 function DrinksProgress() {
   const { id } = useParams();
   const { fetchData, fetchLoading } = useFetch(`https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=${id}`);
@@ -18,6 +20,8 @@ function DrinksProgress() {
   const [message, setMessage] = useState(false);
   const history = useHistory();
   const [localFavorite, setLocalFavorite] = useState(false);
+  const [isDisabled, setIsDisabled] = useState(true);
+  const [numIngred, setNumIngred] = useState(MAX_INGRED);
 
   useEffect(() => {
     const local = JSON
@@ -37,6 +41,23 @@ function DrinksProgress() {
       setLocalFavorite(false);
     }
   }, [id]);
+
+  useEffect(() => {
+    if (!Array.isArray(fetchData) && fetchData) {
+      const num = Object.entries(fetchData?.drinks[0])
+        .filter(([chv, val]) => chv.includes('strIngredient') && val).length;
+      setNumIngred(num);
+    }
+    console.log(fetchData);
+  }, [fetchData]);
+
+  useEffect(() => {
+    if (Object.values(objChks).filter((el) => el).length === numIngred) {
+      setIsDisabled(false);
+    } else {
+      setIsDisabled(true);
+    }
+  }, [objChks, numIngred]);
 
   const handleShare = async () => {
     setMessage(true);
@@ -81,6 +102,24 @@ function DrinksProgress() {
       localStorage.setItem('favoriteRecipes', JSON.stringify([...local, obj]));
       setLocalFavorite(true);
     }
+  };
+
+  const handleFinish = () => {
+    const local = JSON.parse(localStorage.getItem('doneRecipes ') || '[]');
+    const obj = {
+      id: fetchData?.drinks[0]?.idDrink,
+      nationality: '',
+      name: fetchData?.drinks[0]?.strDrink,
+      category: fetchData?.drinks[0]?.strCategory,
+      image: fetchData?.drinks[0]?.strDrinkThumb,
+      tags: (fetchData?.drinks[0]?.strTags?.split(',') || []),
+      alcoholicOrNot: fetchData?.drinks[0]?.strAlcoholic,
+      type: 'drink',
+      doneDate: new Date().toISOString(),
+    };
+    console.log(obj, 'antes de salvar no local', local);
+    localStorage.setItem('doneRecipes', JSON.stringify([...local, obj]));
+    history.push('/done-recipes');
   };
 
   // console.log(fetchData?.meals[0]);
@@ -138,7 +177,15 @@ function DrinksProgress() {
           )) }
 
       </div>
-      <button data-testid="finish-recipe-btn" type="button">Finalizar</button>
+      <button
+        disabled={ isDisabled }
+        data-testid="finish-recipe-btn"
+        type="button"
+        onClick={ handleFinish }
+      >
+        Finalizar
+
+      </button>
     </div>
   );
 }
