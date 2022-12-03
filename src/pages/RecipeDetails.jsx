@@ -9,7 +9,7 @@ import blackHeartIcon from '../images/blackHeartIcon.svg';
 
 const copy = require('clipboard-copy');
 
-function DetailsRecipes() {
+function RecipeDetails() {
   const { fetchLoading, fetchData } = useFetch('https://www.thecocktaildb.com/api/json/v1/1/search.php?s=');
   const number6 = 6;
   const history = useHistory();
@@ -199,4 +199,4 @@ function DetailsRecipes() {
   );
 }
 
-export default DetailsRecipes;
+export default RecipeDetails;

@@ -6,7 +6,7 @@ import useFetch from '../hooks/useFetch';
 const objStyle = { textDecoration: 'line-through solid rgb(0, 0, 0)' };
 const objNone = { textDecoration: 'none' };
 
-function RecipesProgress() {
+function RecipeInProgres() {
   const { id } = useParams();
   const { fetchData, fetchLoading } = useFetch(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${id}`);
   const [objChks, setObjChks] = useState({});
@@ -58,4 +58,4 @@ function RecipesProgress() {
   );
 }
 
-export default RecipesProgress;
+export default RecipeInProgres;

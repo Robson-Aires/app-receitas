@@ -4,6 +4,8 @@ import userEvent from '@testing-library/user-event';
 import App from '../App';
 import renderWithRouter from '../Helpers/renderWithRouter';
 
+const IDPORK = 'Pork-category-filter';
+
 const mockMeals = {
   meals: [
     { idMeal: '52977', strMeal: 'Corba', strCategory: 'Side', strMealThumb: 'https://www.themealdb.com//images//media//meals//58oia61564916529.jpg' },
@@ -26,22 +28,24 @@ const mockResultButton = {
     { idMeal: '52926', strMeal: 'Tourtiere', strCategory: 'Pork', strMealThumb: 'https://www.themealdb.com//images//media//meals//ytpstt1511814614.jpg' },
   ],
 };
-beforeEach(() => {
-  global.fetch = jest.fn().mockResolvedValue({
-    json: jest.fn()
-      .mockResolvedValue(mockMeals)
-      .mockResolvedValueOnce(mockButtons)
-      .mockResolvedValueOnce(mockMeals)
-      .mockResolvedValueOnce(mockResultButton),
 
-  });
-});
 describe('Testa os botões de filtro', () => {
+  beforeEach(() => {
+    global.fetch = jest.fn().mockResolvedValue({
+      json: jest.fn()
+        .mockResolvedValue(mockMeals)
+        .mockResolvedValueOnce(mockButtons)
+        .mockResolvedValueOnce(mockMeals)
+        .mockResolvedValueOnce(mockResultButton),
+
+    });
+  });
+
   it('Verifica a funcionalidade dos botões', async () => {
     const { history } = renderWithRouter(<App />);
     act(() => { history.push('/meals'); });
     const beef = await screen.findByTestId('Beef-category-filter');
-    const Pork = await screen.findByTestId('Pork-category-filter');
+    const Pork = await screen.findByTestId(IDPORK);
     const Seafood = await screen.findByTestId('Seafood-category-filter');
     const Side = await screen.findByTestId('Side-category-filter');
 
@@ -64,5 +68,15 @@ describe('Testa os botões de filtro', () => {
     expect(history.location.pathname).toBe('/meals');
     userEvent.click(await screen.findByTestId('0-card-img'));
     expect(history.location.pathname).toBe('/meals/52977');
+  });
+  it('verificar botao toggle', async () => {
+    const { history } = renderWithRouter(<App />);
+    act(() => { history.push('/meals'); });
+    let Pork = await screen.findByTestId(IDPORK);
+    userEvent.click(Pork);
+    expect(await screen.findAllByAltText('asd')).toHaveLength(1);
+    Pork = await screen.findByTestId(IDPORK);
+    userEvent.click(Pork);
+    expect(await screen.findAllByAltText('asd')).toHaveLength(5);
   });
 });
