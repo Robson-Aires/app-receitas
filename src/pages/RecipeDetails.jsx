@@ -162,7 +162,7 @@ function RecipeDetails() {
              </li>
            )))}
       </ul>
-      {done.every((e) => e.id !== id) && (
+      {!!(done.every((e) => e.id !== id) && !progress[id]) && (
         <button
           type="button"
           data-testid="start-recipe-btn"
@@ -177,6 +177,7 @@ function RecipeDetails() {
           type="button"
           data-testid="start-recipe-btn"
           className="btn-carrosel"
+          onClick={ () => history.push(`/meals/${id}/in-progress`) }
         >
           Continue Recipe
         </button>

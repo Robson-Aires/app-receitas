@@ -24,13 +24,20 @@ function DetailsDrinks() {
   const [ingredientsMeasures, setIngredientsMeasures] = useState([]);
   const [message, setMessage] = useState(false);
   const [localFavorite, setLocalFavorite] = useState(false);
+  const [done, setDone] = useState([]);
 
   useEffect(() => {
+    const recipesMade = JSON.parse((localStorage.getItem('doneRecipes') || '[]'));
+    setDone(recipesMade);
+
+    const recipesProgress = JSON
+      .parse((localStorage.getItem('inProgressRecipes') || '{"drinks": {"id": null}}'));
+    setProgress(recipesProgress.drinks);
+    console.log('teste', recipesProgress.drinks);
+
     const ReturnAPIDrinks = async () => {
-      setDataDrinks(await SearchAPIidrink(id));
-      const recipesProgress = JSON
-        .parse((localStorage.getItem('inProgressRecipes') || '{"drinks": {"id": null}}'));
-      setProgress(recipesProgress.drinks);
+      const request = await SearchAPIidrink(id);
+      setDataDrinks(request);
     };
     ReturnAPIDrinks();
     const local = JSON.parse(localStorage.getItem('favoriteRecipes') || '[]');
@@ -155,21 +162,24 @@ function DetailsDrinks() {
              </li>
            )))}
       </ul>
-      <button
-        type="button"
-        data-testid="start-recipe-btn"
-        className="btn-carrosel"
-        onClick={ () => handleSubmit(id) }
-      >
-        Start Recipe
-      </button>
+      {!!(done.every((e) => e.id !== id) && !progress[id]) && (
+        <button
+          type="button"
+          data-testid="start-recipe-btn"
+          className="btn-carrosel"
+          onClick={ () => handleSubmit(id) }
+        >
+          Start Recipe
+        </button>
+      )}
       { progress[id] && (
         <button
           type="button"
           data-testid="start-recipe-btn"
           className="btn-carrosel"
+          onClick={ () => history.push(`/drinks/${id}/in-progress`) }
         >
-          Continuar Receita
+          Continue Recipe
         </button>
       )}
 
