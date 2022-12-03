@@ -104,6 +104,24 @@ function DrinksProgress() {
     }
   };
 
+  const handleFinish = () => {
+    const local = JSON.parse(localStorage.getItem('doneRecipes ') || '[]');
+    const obj = {
+      id: fetchData?.drinks[0]?.idDrink,
+      nationality: '',
+      name: fetchData?.drinks[0]?.strDrink,
+      category: fetchData?.drinks[0]?.strCategory,
+      image: fetchData?.drinks[0]?.strDrinkThumb,
+      tags: (fetchData?.drinks[0]?.strTags?.split(',') || []),
+      alcoholicOrNot: fetchData?.drinks[0]?.strAlcoholic,
+      type: 'drink',
+      doneDate: new Date().toISOString(),
+    };
+    console.log(obj, 'antes de salvar no local', local);
+    localStorage.setItem('doneRecipes', JSON.stringify([...local, obj]));
+    history.push('/done-recipes');
+  };
+
   // console.log(fetchData?.meals[0]);
   if (fetchLoading) { return <p>Carregando...</p>; }
   return (
@@ -163,6 +181,7 @@ function DrinksProgress() {
         disabled={ isDisabled }
         data-testid="finish-recipe-btn"
         type="button"
+        onClick={ handleFinish }
       >
         Finalizar
 

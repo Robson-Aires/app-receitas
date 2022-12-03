@@ -105,6 +105,24 @@ function RecipeInProgres() {
     }
   };
 
+  const handleFinish = () => {
+    const local = JSON.parse(localStorage.getItem('doneRecipes ') || '[]');
+    const obj = {
+      id: fetchData?.meals[0]?.idMeal,
+      nationality: fetchData?.meals[0]?.strArea,
+      name: fetchData?.meals[0]?.strMeal,
+      category: fetchData?.meals[0]?.strCategory,
+      image: fetchData?.meals[0]?.strMealThumb,
+      tags: (fetchData?.meals[0]?.strTags?.split(',') || []),
+      alcoholicOrNot: '',
+      type: 'meal',
+      doneDate: new Date().toISOString(),
+    };
+    console.log(obj, 'antes de salvar no local', local);
+    localStorage.setItem('doneRecipes', JSON.stringify([...local, obj]));
+    history.push('/done-recipes');
+  };
+
   // console.log(fetchData);
   if (fetchLoading) { return <p>Carregando...</p>; }
   return (
@@ -161,6 +179,7 @@ function RecipeInProgres() {
         data-testid="finish-recipe-btn"
         type="button"
         disabled={ isDisabled }
+        onClick={ handleFinish }
       >
         Finalizar
 
