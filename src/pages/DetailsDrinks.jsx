@@ -169,7 +169,7 @@ function DetailsDrinks() {
           data-testid="start-recipe-btn"
           className="btn-carrosel"
         >
-          Continue Recipe
+          Continuar Receita
         </button>
       )}
 
