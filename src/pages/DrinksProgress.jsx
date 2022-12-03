@@ -11,6 +11,8 @@ const strObjLocal = '{"drinks": {}, "meals": {}}';
 
 const copy = require('clipboard-copy');
 
+const MAX_INGRED = 20;
+
 function DrinksProgress() {
   const { id } = useParams();
   const { fetchData, fetchLoading } = useFetch(`https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=${id}`);
@@ -18,6 +20,8 @@ function DrinksProgress() {
   const [message, setMessage] = useState(false);
   const history = useHistory();
   const [localFavorite, setLocalFavorite] = useState(false);
+  const [isDisabled, setIsDisabled] = useState(true);
+  const [numIngred, setNumIngred] = useState(MAX_INGRED);
 
   useEffect(() => {
     const local = JSON
@@ -37,6 +41,23 @@ function DrinksProgress() {
       setLocalFavorite(false);
     }
   }, [id]);
+
+  useEffect(() => {
+    if (!Array.isArray(fetchData) && fetchData) {
+      const num = Object.entries(fetchData?.drinks[0])
+        .filter(([chv, val]) => chv.includes('strIngredient') && val).length;
+      setNumIngred(num);
+    }
+    console.log(fetchData);
+  }, [fetchData]);
+
+  useEffect(() => {
+    if (Object.values(objChks).filter((el) => el).length === numIngred) {
+      setIsDisabled(false);
+    } else {
+      setIsDisabled(true);
+    }
+  }, [objChks, numIngred]);
 
   const handleShare = async () => {
     setMessage(true);
@@ -138,7 +159,14 @@ function DrinksProgress() {
           )) }
 
       </div>
-      <button data-testid="finish-recipe-btn" type="button">Finalizar</button>
+      <button
+        disabled={ isDisabled }
+        data-testid="finish-recipe-btn"
+        type="button"
+      >
+        Finalizar
+
+      </button>
     </div>
   );
 }
