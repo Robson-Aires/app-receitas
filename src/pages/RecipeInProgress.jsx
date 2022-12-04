@@ -13,7 +13,7 @@ const copy = require('clipboard-copy');
 
 const MAX_INGRED = 20;
 
-function RecipeInProgres() {
+function RecipeInProgress() {
   const { id } = useParams();
   const { fetchData, fetchLoading } = useFetch(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${id}`);
   const [objChks, setObjChks] = useState({});
@@ -188,4 +188,4 @@ function RecipeInProgres() {
   );
 }
 
-export default RecipeInProgres;
+export default RecipeInProgress;
