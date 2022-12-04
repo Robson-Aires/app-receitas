@@ -7,7 +7,7 @@ import Recipes from './pages/Recipes';
 import Drinks from './pages/Drinks';
 import RecipeDetails from './pages/RecipeDetails';
 import DetailsDrinks from './pages/DetailsDrinks';
-import RecipeInProgress from './pages/RecipeInProgres';
+import RecipeInProgress from './pages/RecipeInProgress';
 import DrinksProgress from './pages/DrinksProgress';
 import Profile from './pages/Profile';
 import DoneRecipes from './pages/DoneRecipes';
