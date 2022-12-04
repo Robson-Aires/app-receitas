@@ -21,10 +21,10 @@ describe('Testa o butao de favorite da pagina RecipeDetails', () => {
     userEvent.click(btnSearchTop);
     userEvent.click(btnSearchTop);
   });
-//   it('Verifica o botao de compartilhar', async () => {
-//     const { history } = renderWithRouter(<App />);
+  //   it('Verifica o botao de compartilhar', async () => {
+  //     const { history } = renderWithRouter(<App />);
 
-//     act(() => { history.push('meals/52977'); });
+  //     act(() => { history.push('meals/52977'); });
 
 //     const btncompartilhar = await screen.findByTestId('share-btn');
 //     expect(btncompartilhar).toBeInTheDocument();
