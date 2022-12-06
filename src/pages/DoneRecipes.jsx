@@ -1,20 +1,20 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import shareIcon from '../images/shareIcon.svg';
+import recipesContext from '../context/recipesContext';
 
 import Header from '../components/Header';
 
 const copy = require('clipboard-copy');
 
 function DoneRecipes() {
-  const [done, setDone] = useState([]);
   const [message, setMessage] = useState(false);
   const history = useHistory();
-
+  const { done, setDone } = useContext(recipesContext);
   useEffect(() => {
     const local = JSON.parse((localStorage.getItem('doneRecipes') || '[]'));
     setDone(local);
-  }, []);
+  }, [setDone]);
 
   const handleShare = (recipe) => {
     setMessage(true);

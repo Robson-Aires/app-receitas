@@ -2,6 +2,7 @@ import React, { useState, useMemo } from 'react';
 import recipesContext from './recipesContext';
 
 export default function RecipesProvider({ children }) {
+  const [done, setDone] = useState([]);
   const [data, setData] = useState([]);
   const [inputSearch, setInputSearch] = useState('');
   const [radio, setRadio] = useState('ingredient');
@@ -26,6 +27,8 @@ export default function RecipesProvider({ children }) {
     };
     return {
       data,
+      done,
+      setDone,
       loading,
       setData,
       setLoading,
@@ -39,7 +42,7 @@ export default function RecipesProvider({ children }) {
       setToggle,
       toggle,
     };
-  }, [data, loading, inputSearch, radio, memoryData, toggle]);
+  }, [data, done, loading, inputSearch, radio, memoryData, toggle]);
 
   return (
     <recipesContext.Provider value={ values }>
