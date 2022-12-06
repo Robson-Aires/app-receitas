@@ -1,13 +1,11 @@
-import { React, useContext, useState, useEffect } from 'react';
+import { React, useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Header from '../components/Header';
-import recipesContext from '../context/recipesContext';
 import blackHeartIcon from '../images/blackHeartIcon.svg';
+import shareIcon from '../images/shareIcon.svg';
 
 function Favorites() {
   // const history = useHistory();
-  const { done } = useContext(recipesContext);
-  console.log(done);
   const [favorite, setFavorite] = useState([]);
 
   useEffect(() => {
@@ -44,7 +42,7 @@ function Favorites() {
       </button>
       <div className="card-container">
         {
-          done.map((el, i) => (
+          favorite.map((el, i) => (
             <div className="card" key={ el.id }>
 
               <img src={ el.image } alt="abc" data-testid={ `${i}-horizontal-image` } />
@@ -60,7 +58,7 @@ function Favorites() {
 
               </p>
               <p data-testid={ `${i}-horizontal-done-date` }>{el.doneDate}</p>
-              {message && <p>Link copied!</p>}
+              {/* {message && <p>Link copied!</p>} */}
               <button
                 type="button"
                 onClick={ () => handleShare(el) }
@@ -71,40 +69,22 @@ function Favorites() {
                   data-testid={ `${i}-horizontal-share-btn` }
                 />
               </button>
-              {el.tags.map((tag) => (
-                <p key={ tag } data-testid={ `${i}-${tag}-horizontal-tag` }>{tag}</p>
-              ))}
+              <button
+                type="button"
+                // onClick={ handleFavorite }
+              >
+                <img
+                  data-testid={ `${i}-horizontal-favorite-btn` }
+                  src={ blackHeartIcon }
+                  alt=""
+                />
+
+              </button>
             </div>
           ))
         }
       </div>
-      {
-        favorite.map((recipe, i) => (
-          <div key={ i }>
-            <p>{recipe.name}</p>
-            <p>
-              {
-                `
-              ${recipe.nationality}
-              -
-              ${recipe.category}`
-              }
-            </p>
-            <input type="image" src={ recipe.image } alt="foto da receita" />
-            <button type="button">compartilhar</button>
-            <button
-              type="button"
-              // onClick={ handleFavorite }
-            >
-              <img
-                data-testid="favorite-btn"
-                src={ blackHeartIcon }
-                alt=""
-              />
-            </button>
-          </div>
-        ))
-      }
+
     </div>
   );
 }
