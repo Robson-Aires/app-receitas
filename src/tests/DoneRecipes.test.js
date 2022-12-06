@@ -1,6 +1,7 @@
 import React from 'react';
 import { screen, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import copy from 'clipboard-copy';
 import App from '../App';
 import renderWithRouter from '../Helpers/renderWithRouter';
 
@@ -38,16 +39,19 @@ const imag2 = '1-horizontal-image';
 
 const rota = '/done-recipes';
 
+jest.mock('clipboard-copy');
+
+beforeEach(() => {
+  jest.resetAllMocks();
+  localStorage.setItem('doneRecipes', JSON.stringify(objDone));
+  // jest.mock('clipboard-copy');
+});
+afterEach(() => { jest.resetAllMocks(); });
 describe('Testa Done recipes', () => {
-  beforeEach(() => {
-    jest.resetAllMocks();
-    localStorage.setItem('doneRecipes', JSON.stringify(objDone));
-    // jest.mock('clipboard-copy');
-  });
-  afterEach(() => { jest.resetAllMocks(); });
   it('Clica em compartilhar', async () => {
     // copy.mockReturnValueOnce(() => null);
     // window.document.copy = jest.fn();
+    copy.mockImplementation(() => {});
     const { history } = renderWithRouter(<App />);
 
     act(() => { history.push(rota); });
@@ -66,8 +70,8 @@ describe('Testa Done recipes', () => {
     // userEvent.type(inputName, 'lime');
     // jest.spyOn(global, 'fetch'); global.fetch.mockResolvedValue({ json: jest.fn().mockResolvedValue({ meals: null }) });
     // userEvent.click(btnSearch);
-    await new Promise((r) => { setTimeout(r, 1000); });
-    jest.clearAllMocks();
+    // await new Promise((r) => { setTimeout(r, 1000); });
+    // jest.clearAllMocks();
   });
   it('Clica em filtro meals', async () => {
     // copy.mockReturnValueOnce(() => null);
@@ -120,6 +124,7 @@ describe('Testa Done recipes', () => {
   it('Clica em filtro all', async () => {
     // copy.mockReturnValueOnce(() => null);
     // window.document.copy = jest.fn();
+    copy.mockImplementation(() => {});
     const { history } = renderWithRouter(<App />);
 
     act(() => { history.push(rota); });

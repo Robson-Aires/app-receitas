@@ -1,17 +1,39 @@
 import { React, useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import Header from '../components/Header';
 import blackHeartIcon from '../images/blackHeartIcon.svg';
 import shareIcon from '../images/shareIcon.svg';
 
+const copy = require('clipboard-copy');
+
 function Favorites() {
-  // const history = useHistory();
+  const history = useHistory();
   const [favorite, setFavorite] = useState([]);
+  const [message, setMessage] = useState(false);
 
   useEffect(() => {
     const local = JSON.parse((localStorage.getItem('favoriteRecipes')) || '[]');
     setFavorite(local);
   }, []);
+
+  const handleShare = (parameter1, parameter2) => {
+    setMessage(true);
+    const copied = `${window.location.origin}/${parameter1}s/${parameter2}`;
+    console.log(`${history.location.pathname}`);
+    copy(copied);
+  };
+
+  const deleteButton = (value) => {
+    const result = favorite.filter((element) => value !== element.id);
+    localStorage.setItem('favoriteRecipes', JSON.stringify(result));
+    setFavorite(result);
+  };
+
+  const goFilter = (str) => {
+    const local = JSON.parse((localStorage.getItem('favoriteRecipes') || '[]'));
+    const arr = local.filter((el) => el.type.includes(str));
+    setFavorite(arr);
+  };
 
   return (
     <div>
@@ -44,8 +66,15 @@ function Favorites() {
         {
           favorite.map((el, i) => (
             <div className="card" key={ el.id }>
-
-              <img src={ el.image } alt="abc" data-testid={ `${i}-horizontal-image` } />
+              <input
+                data-testid={ `${i}-horizontal-image` }
+                type="button"
+                onClick={ () => history
+                  .push(`/${el.type}s/${el.id}`) }
+                src={ el.image }
+                alt="abc"
+              />
+              {/* <img src={ el.image } alt="abc" data-testid={ `${i}-horizontal-image` } /> */}
 
               <Link to={ `/${el.type}s/${el.id}` }>
                 <p data-testid={ `${i}-horizontal-name` }>{el.name}</p>
@@ -58,10 +87,10 @@ function Favorites() {
 
               </p>
               <p data-testid={ `${i}-horizontal-done-date` }>{el.doneDate}</p>
-              {/* {message && <p>Link copied!</p>} */}
+              {message && <p>Link copied!</p>}
               <button
                 type="button"
-                onClick={ () => handleShare(el) }
+                onClick={ () => handleShare(el.type, el.id) }
               >
                 <img
                   src={ shareIcon }
@@ -71,7 +100,7 @@ function Favorites() {
               </button>
               <button
                 type="button"
-                // onClick={ handleFavorite }
+                onClick={ () => deleteButton(el.id) }
               >
                 <img
                   data-testid={ `${i}-horizontal-favorite-btn` }
@@ -83,6 +112,7 @@ function Favorites() {
             </div>
           ))
         }
+
       </div>
 
     </div>
