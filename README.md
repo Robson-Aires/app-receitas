@@ -39,7 +39,6 @@
 <br />
 
 <img src="images/App-receitas02.png">
-
 <br />
 <br />
 
